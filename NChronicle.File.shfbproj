@@ -28,7 +28,7 @@
     <SourceCodeBasePath>.\</SourceCodeBasePath>
     <MissingTags>Summary, Parameter, Returns, AutoDocumentCtors, TypeParameter, AutoDocumentDispose</MissingTags>
     <DocumentationSources>
-      <DocumentationSource sourceFile="NChronicle.File.csproj" />
+      <DocumentationSource sourceFile="NChronicle.File_NetFx.csproj" />
     </DocumentationSources>
     <HelpFileVersion>1.0.1</HelpFileVersion>
     <MaximumGroupParts>2</MaximumGroupParts>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Xml;
@@ -7,6 +8,9 @@ using System.Xml.Serialization;
 using NChronicle.Core.Model;
 using NChronicle.File.Exceptions;
 using NChronicle.File.Interfaces;
+#if !NETFX
+using System.Reflection;
+#endif
 
 namespace NChronicle.File.Configuration {
 
@@ -37,7 +41,7 @@ namespace NChronicle.File.Configuration {
             this.IgnoredTags = new ConcurrentDictionary<string, byte>();
             this.TimeZone = TimeZoneInfo.Local;
             this.OutputPattern = "{%yyyy/MM/dd HH:mm:ss.fff} [{TH}] {MSG?{MSG} {EXC?\n}}{EXC?{EXC}\n}{TAGS?[{TAGS}]}";
-            this.OutputPath = System.IO.Path.Combine(Environment.CurrentDirectory, "chronicle.log");
+            this.OutputPath = System.IO.Path.Combine(Directory.GetCurrentDirectory(), "chronicle.log");
         }
 
         /// <summary>
@@ -169,17 +173,16 @@ namespace NChronicle.File.Configuration {
         /// </summary>
         /// <param name="path">The file path to append records to.</param>
         public void WithOutputPath (string path) {
-
             if (path == null) {
                 throw new ArgumentNullException(nameof(path));
             }
-            if (path.Any(System.IO.Path.GetInvalidPathChars().Contains)
-                || System.IO.Path.GetFileName(path).Any(System.IO.Path.GetInvalidFileNameChars().Contains))
+            if (path.Any(Path.GetInvalidPathChars().Contains)
+                || Path.GetFileName(path).Any(Path.GetInvalidFileNameChars().Contains))
                 throw new InvalidFilePathException("The path or file name in the given path contains one or more invalid characters.");
-            if (!System.IO.Path.IsPathRooted(path))
-                path = System.IO.Path.Combine(Environment.CurrentDirectory, path);
+            if (!Path.IsPathRooted(path))
+                path = Path.Combine(Directory.GetCurrentDirectory(), path);
             if (!System.IO.File.Exists(path))
-                System.IO.File.Create(path).Close();
+                System.IO.File.Create(path).Dispose();
             this.OutputPath = path;
         }
 
@@ -309,11 +312,13 @@ namespace NChronicle.File.Configuration {
         /// <seealso cref="NotListening"/>
         public void ListeningToAllLevels() {
             this.Levels.Clear();
-            foreach (var levelName in typeof (ChronicleLevel).GetEnumNames()) {
+            var enumNames = Enum.GetNames(typeof(ChronicleLevel));
+            foreach (var levelName in enumNames) {
                 ChronicleLevel level;
                 Enum.TryParse(levelName, out level);
                 this.Levels[level] = 0;
             }
+
             this._levelsAreDefault = false;
         }
 
@@ -491,7 +496,7 @@ namespace NChronicle.File.Configuration {
                             try {
                                 this.WithTimeZone(TimeZoneInfo.FindSystemTimeZoneById(timeZone));
                             }
-                            catch (TimeZoneNotFoundException) {
+                            catch (Exception) {
                                 throw new XmlException($"Unexpected library configuration for {nameof(FileChronicleLibrary)}, value '{timeZone}' for {nameof(this.TimeZone)} is not a valid TimeZone ID.");
                             }
                             break;
@@ -502,9 +507,13 @@ namespace NChronicle.File.Configuration {
                             var type = Type.GetType(typeStr, false, true);
                             if (type == null)
                                 throw new TypeLoadException($"Unexpected library configuration for {nameof(FileChronicleLibrary)}, type {typeStr} could not be found.");
-                            if (type.GetInterface(nameof(IRetentionPolicy)) == null)
+#if NETFX
+                            if (!typeof(IRetentionPolicy).IsAssignableFrom(type))
+#else
+                            if (!typeof(IRetentionPolicy).GetTypeInfo().IsAssignableFrom(type.GetTypeInfo()))
+#endif
                                 throw new TypeLoadException($"Unexpected library configuration for {nameof(FileChronicleLibrary)}, type {type.Name} does not implement {nameof(IRetentionPolicy)}.");
-                            IRetentionPolicy retentionPolicy = null;
+                                IRetentionPolicy retentionPolicy = null;
                             try {
                                 retentionPolicy = Activator.CreateInstance(type) as IRetentionPolicy;
                             } catch (MissingMethodException e) {

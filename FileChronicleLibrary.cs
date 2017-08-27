@@ -10,19 +10,36 @@ using NChronicle.Core.Interfaces;
 using NChronicle.Core.Model;
 using NChronicle.File.Configuration;
 using NChronicle.File.Delegates;
+using System.Collections.Concurrent;
 
 namespace NChronicle.File {
 
-	/// <summary>
-	/// A <see cref="IChronicleLibrary"/> writing <see cref="ChronicleRecord"/>s to a file.
-	/// </summary>
-	public class FileChronicleLibrary : IChronicleLibrary, IDisposable {
+    /// <summary>
+    /// A <see cref="IChronicleLibrary"/> writing <see cref="ChronicleRecord"/>s to a file.
+    /// </summary>
+    public class FileChronicleLibrary : IChronicleLibrary, IDisposable {
 
-		private readonly FileChronicleLibraryConfiguration _configuration;
-		private volatile FileStream _fileStream;
-		private string _fileStreamLockKey => string.Intern ($"{nameof (FileChronicleLibrary)}.{nameof (this._fileStream)}.{this._configuration.OutputPath}");
+#if !NETFX
+        private static ConcurrentDictionary<string, object> _fsLockObjects = new ConcurrentDictionary<string, object>();
+#endif
 
-		private readonly Dictionary<string, MethodHandler> _methods;
+        private readonly FileChronicleLibraryConfiguration _configuration;
+        private volatile FileStream _fileStream;
+#if NETFX
+        private string _fileStreamLockKey => string.Intern ($"{nameof (FileChronicleLibrary)}.{nameof (this._fileStream)}.{this._configuration.OutputPath}");
+#else
+        private object _fileStreamLockKey {
+            get {
+                lock (FileChronicleLibrary._fsLockObjects) {
+                    return FileChronicleLibrary._fsLockObjects.ContainsKey(this._configuration.OutputPath)
+                        ? FileChronicleLibrary._fsLockObjects[this._configuration.OutputPath]
+                        : (FileChronicleLibrary._fsLockObjects[this._configuration.OutputPath] = new object()); 
+                }
+            }
+        }
+#endif
+
+        private readonly Dictionary<string, MethodHandler> _methods;
 		private readonly Dictionary<string, KeyHandler> _keys;
 
 		/// <summary>
@@ -64,7 +81,7 @@ namespace NChronicle.File {
 
 		private string FormulateOutput (ChronicleRecord record, string pattern) {
 			var output = pattern;
-			var currentTime = TimeZoneInfo.ConvertTimeFromUtc (DateTime.UtcNow, this._configuration.TimeZone);
+			var currentTime = TimeZoneInfo.ConvertTime(DateTime.UtcNow, TimeZoneInfo.Utc, this._configuration.TimeZone);
 			foreach (var token in this.FindTokens (pattern)) {
 				var tokenBody = token.Substring (1, token.Length - 2);
 				var tokenIsDate = tokenBody.StartsWith ("%");
@@ -160,7 +177,6 @@ namespace NChronicle.File {
 		}
 
 		private void SendToFile (string output) {
-			//if (this._disposed) return;
 			if (this._fileStream == null) {
 				lock (this._fileStreamLockKey) {
 					if (this._fileStream == null) {
@@ -170,9 +186,9 @@ namespace NChronicle.File {
 			}
 			var bytes = Encoding.UTF8.GetBytes ($"{output}\r\n");
 			lock (this._fileStreamLockKey) {
-				if (this._configuration.RetentionPolicy != null) {
+                if (this._configuration.RetentionPolicy != null) {
 					if (this._configuration.RetentionPolicy.CheckPolicy (this._configuration.OutputPath, bytes)) {
-						this._fileStream.Close ();
+						this._fileStream.Dispose ();
 						this._configuration.RetentionPolicy.InvokePolicy (this._configuration.OutputPath);
 						this._fileStream = new FileStream (this._configuration.OutputPath, FileMode.Append, FileAccess.Write, FileShare.Read);
 					}
@@ -196,7 +212,7 @@ namespace NChronicle.File {
 		private delegate string MethodHandler (ChronicleRecord record, params string [] parameters);
 		private delegate string KeyHandler (ChronicleRecord record);
 
-		#region Xml Serialization
+#region Xml Serialization
 		/// <summary>
 		/// Required for XML serialization, this method offers no functionality.
 		/// </summary>
@@ -216,7 +232,7 @@ namespace NChronicle.File {
 		/// <param name="writer"><see cref="XmlWriter" /> stream to the configuration file.</param>
 		/// <seealso cref="Core.NChronicle.SaveConfigurationTo(string)"/>
 		public void WriteXml (XmlWriter writer) => this._configuration.WriteXml (writer);
-		#endregion
+#endregion
 
 		/// <summary>
 		/// Conclude and close this <see cref="FileChronicleLibrary"/>.
@@ -225,7 +241,7 @@ namespace NChronicle.File {
 			if (this._fileStream != null) {
 				lock (this._fileStreamLockKey) {
 					this._fileStream.Flush ();
-					this._fileStream.Close ();
+					this._fileStream.Dispose ();
 				}
 			}
 			GC.SuppressFinalize (this);

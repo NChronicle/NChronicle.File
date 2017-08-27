@@ -3,11 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26430.16
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NChronicle.File", "NChronicle.File.csproj", "{5CCFB68D-D230-48AA-9DDC-BCE65BA8EC87}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NChronicle.File_NetFx", "NChronicle.File_NetFx.csproj", "{5CCFB68D-D230-48AA-9DDC-BCE65BA8EC87}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Wiki", "Wiki", "{1338668E-E646-4575-B3D8-7E6F5980AE63}"
 EndProject
 Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "NChronicle.File", "NChronicle.File.shfbproj", "{7D4D4587-76D5-4F06-980A-E9505DFCA7B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Meta", "Meta", "{34FC1FD6-3C79-401D-A6FD-DE4DF95FA268}"
+	ProjectSection(SolutionItems) = preProject
+		NChronicle.File.nuspec = NChronicle.File.nuspec
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C655F21E-855F-4A70-BCB9-DCB8B200DD2F}"
+	ProjectSection(SolutionItems) = preProject
+		.gitlab-ci.yml = .gitlab-ci.yml
+		Build.ps1 = Build.ps1
+		BuildFormattedWiki.ps1 = BuildFormattedWiki.ps1
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NChronicle.File_NetStandard", "NChronicle.File_NetStandard.csproj", "{88B7A5A9-538C-4DB6-8F50-6BC58D09F475}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,11 +37,16 @@ Global
 		{7D4D4587-76D5-4F06-980A-E9505DFCA7B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D4D4587-76D5-4F06-980A-E9505DFCA7B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D4D4587-76D5-4F06-980A-E9505DFCA7B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88B7A5A9-538C-4DB6-8F50-6BC58D09F475}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88B7A5A9-538C-4DB6-8F50-6BC58D09F475}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88B7A5A9-538C-4DB6-8F50-6BC58D09F475}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88B7A5A9-538C-4DB6-8F50-6BC58D09F475}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{7D4D4587-76D5-4F06-980A-E9505DFCA7B6} = {1338668E-E646-4575-B3D8-7E6F5980AE63}
+		{7D4D4587-76D5-4F06-980A-E9505DFCA7B6} = {34FC1FD6-3C79-401D-A6FD-DE4DF95FA268}
+		{C655F21E-855F-4A70-BCB9-DCB8B200DD2F} = {34FC1FD6-3C79-401D-A6FD-DE4DF95FA268}
 	EndGlobalSection
 EndGlobal

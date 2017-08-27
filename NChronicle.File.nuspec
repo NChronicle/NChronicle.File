@@ -3,11 +3,11 @@
   <metadata>
     <id>NChronicle.File</id>
     <title>NChronicle.File</title>
-    <version>1.0.1</version>
+    <version>1.1.0</version>
     <authors>Andy James</authors>
     <owners>Andy James</owners>
-    <licenseUrl>https://git.ikimi.co/andrewj/NChronicle/raw/master/LICENSE</licenseUrl>
-    <projectUrl>https://git.ikimi.co/andrewj/NChronicle</projectUrl>
+    <licenseUrl>https://git.ikimi.co/NChronicle/NChronicle.File/raw/master/LICENSE</licenseUrl>
+    <projectUrl>https://git.ikimi.co/NChronicle/NChronicle.File</projectUrl>
     <iconUrl>https://git.ikimi.co/uploads/project/avatar/2/NChronicle_simple_square.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <summary>
@@ -22,7 +22,13 @@ Further Libraries planned for the NChronicle logging framework include NChronicl
     </description>
     <dependencies> 
       <group targetFramework="net40">
-        <dependency id="NChronicle.Core" version="1.0.3" />
+        <dependency id="NChronicle.Core" version="1.1.0" />
+      </group>
+      <group targetFramework="netstandard1.4">
+        <dependency id="NChronicle.Core" version="1.1.0" />
+        <dependency id="System.IO.FileSystem" version="4.3.0" />
+        <dependency id="System.Reflection" version="4.3.0" />
+        <dependency id="System.Threading.Thread" version="4.3.0" />
       </group>
     </dependencies>
     <frameworkAssemblies>
@@ -32,12 +38,13 @@ Further Libraries planned for the NChronicle logging framework include NChronicl
     </frameworkAssemblies>
     <language>en-us</language>
     <releaseNotes>
-Added support for configuration from XML (including runtime configuration changes).
+Added support for .NET Standard
     </releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>NChronicle Events Audit Logging Log Trail Recording History Tracking Output File Archive Retention</tags>
   </metadata>
   <files>
-    <file src="bin/Release/NChronicle.File.dll" target="lib\net40" />
+    <file src="bin/Release/netfx4.0/NChronicle.File.dll" target="lib\net40" />
+    <file src="bin/Release/netstandard1.4/NChronicle.File.dll" target="lib\netstandard1.4" />
   </files>
 </package>

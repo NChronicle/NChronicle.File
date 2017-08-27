@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard1.4</TargetFramework>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <AssemblyName>NChronicle.File</AssemblyName>
+    <RootNamespace>NChronicle.File</RootNamespace>
+    <Version>1.1.0</Version>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <LangVersion>latest</LangVersion>
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="**\*" />
+    <Compile Include="Configuration\FileChronicleLibraryConfiguration.cs" />
+    <Compile Include="Configuration\RetentionPolicyConfiguration.cs" />
+    <Compile Include="RetentionPolicy.cs" />
+    <Compile Include="Delegates\RetentionPolicyConfigurationDelegate.cs" />
+    <Compile Include="Interfaces\IRetentionPolicy.cs" />
+    <Compile Include="Delegates\FileChronicleLibraryConfigurationDelegate.cs" />
+    <Compile Include="Exceptions\InvalidFilePathException.cs" />
+    <Compile Include="Extensions\ConfigurationExtensions.cs" />
+    <Compile Include="FileChronicleLibrary.cs" />
+    <None Include="packages.config" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NChronicle.Core" Version="1.1.0" />
+    <PackageReference Include="System.IO.FileSystem" Version="4.3.0" />
+    <PackageReference Include="System.Reflection" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
+  </ItemGroup>
+
+</Project>
