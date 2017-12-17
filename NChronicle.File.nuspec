@@ -3,7 +3,7 @@
   <metadata>
     <id>NChronicle.File</id>
     <title>NChronicle.File</title>
-    <version>1.1.0</version>
+    <version>1.1.1</version>
     <authors>Andy James</authors>
     <owners>Andy James</owners>
     <licenseUrl>https://git.npanda.io/NChronicle/NChronicle.File/raw/master/LICENSE</licenseUrl>
@@ -22,10 +22,10 @@ Further Libraries planned for the NChronicle logging framework include NChronicl
     </description>
     <dependencies> 
       <group targetFramework="net40">
-        <dependency id="NChronicle.Core" version="1.1.0" />
+        <dependency id="NChronicle.Core" version="1.1.1" />
       </group>
       <group targetFramework="netstandard1.4">
-        <dependency id="NChronicle.Core" version="1.1.0" />
+        <dependency id="NChronicle.Core" version="1.1.1" />
         <dependency id="System.IO.FileSystem" version="4.3.0" />
         <dependency id="System.Reflection" version="4.3.0" />
         <dependency id="System.Threading.Thread" version="4.3.0" />
@@ -38,13 +38,15 @@ Further Libraries planned for the NChronicle logging framework include NChronicl
     </frameworkAssemblies>
     <language>en-us</language>
     <releaseNotes>
-Added support for .NET Standard
+Added documentation to intellisense
     </releaseNotes>
     <copyright>Copyright 2017</copyright>
     <tags>NChronicle Events Audit Logging Log Trail Recording History Tracking Output File Archive Retention</tags>
   </metadata>
   <files>
     <file src="bin/Release/netfx4.0/NChronicle.File.dll" target="lib\net40" />
+    <file src="bin/Release/netfx4.0/NChronicle.File.XML" target="lib\net40" />
     <file src="bin/Release/netstandard1.4/NChronicle.File.dll" target="lib\netstandard1.4" />
+    <file src="bin/Release/netstandard1.4/NChronicle.File.xml" target="lib\netstandard1.4" />
   </files>
 </package>

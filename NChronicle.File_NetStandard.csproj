@@ -12,11 +12,13 @@
     <LangVersion>latest</LangVersion>
     <DebugType>none</DebugType>
     <DebugSymbols>false</DebugSymbols>
+    <DocumentationFile>bin\Release\netstandard1.4\NChronicle.File.xml</DocumentationFile>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
+    <DocumentationFile>bin\Debug\netstandard1.4\NChronicle.File.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
